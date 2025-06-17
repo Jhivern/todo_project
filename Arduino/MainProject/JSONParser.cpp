@@ -2,4 +2,4 @@
 
 JSONParser::JSONParser() {
     // Add later method implementation here
-};
+}
