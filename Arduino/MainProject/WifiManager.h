@@ -5,7 +5,8 @@ class WifiManager {
   // Add later method definitions here
   public:
     WifiManager();
-    bool begin();
+    bool connect();
+    bool isOnline();
 };
 
 #endif
