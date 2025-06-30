@@ -6,5 +6,14 @@ WifiManager::WifiManager() {
 
 bool WifiManager::begin() {
   // Add later method implementations here
+
+  return true;
+  
+}
+
+bool WifiManager::isOnline() {
+  // Add later method implementations here
+
+  return true;
   
 }

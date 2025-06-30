@@ -6,6 +6,7 @@ class WifiManager {
   public:
     WifiManager();
     bool begin();
+    bool isOnline();
 };
 
 #endif
