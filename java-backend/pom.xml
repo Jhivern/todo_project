@@ -41,9 +41,17 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Potentially use for OAuth2.0 -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-oauth2-client</artifactId>-->
+<!--        </dependency>-->
+
+        <!--Dependency for authenticating MS accounts-->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>msal4j</artifactId>
+            <version>1.21.0</version>
         </dependency>
     </dependencies>
 

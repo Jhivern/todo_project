@@ -1,3 +1,6 @@
+# ======== CONFIGS ========
+auth.json
+
 # ========== MAVEN ==========
 
 # Maven build output
@@ -36,11 +39,3 @@
 # ========== OS JUNK ==========
 .DS_Store
 Thumbs.db
-
-# ========== IGNORE THESE BAD LINES ==========
-# These override the ignore rules and can accidentally include build folders back in:
-# !**/src/main/**/target/
-# !**/src/test/**/target/
-# !**/src/main/**/build/
-# !**/src/test/**/build/
-# → Delete these unless you have a *very specific, justified* reason to track build folders.
