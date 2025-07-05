@@ -39,3 +39,6 @@ auth.json
 # ========== OS JUNK ==========
 .DS_Store
 Thumbs.db
+
+# ========= PERSONAL ==========
+logbook.md

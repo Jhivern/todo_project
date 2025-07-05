@@ -1,6 +1,9 @@
 package nils.todo;
+import com.google.inject.Singleton;
+
 import java.util.List;
 
+@Singleton
 public class MSGraphService {
     // Add authenticate and get method here
 

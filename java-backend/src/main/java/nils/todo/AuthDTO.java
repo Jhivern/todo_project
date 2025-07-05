@@ -1,5 +1,7 @@
 package nils.todo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * DTO for the auth.json file
  * @param clientId ID of client
@@ -8,6 +10,6 @@ package nils.todo;
  * @param accessToken Token with which we can access the MSGraph API
  * @param refreshToken Token to refresh accessToken without new login
  */
-public record AuthDTO(String clientId, String clientSecret, String tenantId,
-                      String accessToken, String refreshToken) {
+public record AuthDTO(@JsonProperty String  clientId, @JsonProperty String clientSecret, @JsonProperty String tenantId,
+                      @JsonProperty String accessToken, @JsonProperty String refreshToken) {
 }

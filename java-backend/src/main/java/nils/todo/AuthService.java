@@ -1,10 +1,12 @@
 package nils.todo;
 
+import com.google.inject.Singleton;
 import com.microsoft.aad.msal4j.ClientCredentialFactory;
 import com.microsoft.aad.msal4j.ConfidentialClientApplication;
 
 import java.net.MalformedURLException;
 
+@Singleton
 public class AuthService {
     private final AuthDTO authDTO;
 
@@ -15,7 +17,7 @@ public class AuthService {
      * @param authConfigLoader Controls initial access to config file
      */
     public AuthService(AuthConfigLoader authConfigLoader) {
-        this.authDTO = authConfigLoader.getConfig();
+        this.authDTO = authConfigLoader.loadConfig();
         try {
             app = ConfidentialClientApplication.builder(authDTO.clientId(),
                             ClientCredentialFactory.createFromSecret(authDTO.clientSecret()))
