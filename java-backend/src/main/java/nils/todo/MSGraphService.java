@@ -1,11 +1,20 @@
 package nils.todo;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.microsoft.aad.msal4j.HttpRequest;
+import com.microsoft.aad.msal4j.IAuthenticationResult;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 @Singleton
 public class MSGraphService {
-    // Add authenticate and get method here
+    private final AuthService authService;
+
+    @Inject
+    public MSGraphService(AuthService authService) {
+        this.authService =  authService;
+    }
 
     /**
      * Get the ID of the taskList we want to GET
@@ -13,6 +22,8 @@ public class MSGraphService {
      * @return String id of the taskList
      */
     public String getTaskListID(String displayName) {
+        // Make a call to MSGraph using displayName
+        // Parse list ID from
         return null;
     }
 
@@ -22,7 +33,7 @@ public class MSGraphService {
      * @return List of the top 2 tasks
      */
     public List<String> getTop2Tasks(String id) {
-        // Make call to MSGraph
+        // Make a call to MSGraph
         // Parse titles
         return null;
     }
