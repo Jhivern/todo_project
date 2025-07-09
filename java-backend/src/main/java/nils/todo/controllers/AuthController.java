@@ -43,7 +43,7 @@ public class AuthController {
     public ResponseEntity<String> redirect(@RequestParam String code) {
         try {
             IAuthenticationResult result = authService.acquireTokenFromCode(code);
-            return ResponseEntity.ok(result.accessToken());
+            return ResponseEntity.ok().build();
         }
         catch (Exception e) {
             System.err.println("Azure rejected the token\n" + e.getMessage());

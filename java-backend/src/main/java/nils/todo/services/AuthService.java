@@ -7,11 +7,8 @@ import nils.todo.config.AuthDTO;
 import nils.todo.util.BrowserLauncher;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.Set;
 
 @Singleton
@@ -27,17 +24,6 @@ public class AuthService {
     public AuthService(AuthConfigLoader authConfigLoader, ConfidentialClientApplication app) {
         this.app = app;
         this.authDTO = authConfigLoader.readConfig();
-        try {
-            app = ConfidentialClientApplication.builder(authDTO.clientId(),
-                            ClientCredentialFactory.createFromSecret(authDTO.clientSecret()))
-                    .authority("https://login.microsoftonline.com/" + authDTO.tenantId())
-                    .build();
-        }
-        // MalformedURLException thrown when .authority() URL has invalid syntax
-        // Replace this with a non-breaking solution
-        catch(MalformedURLException e) {
-            throw new RuntimeException("Invalid authority URL: " + e.getMessage(), e);
-        }
     }
 
     public boolean hasValidToken() {
@@ -49,7 +35,8 @@ public class AuthService {
             IAuthenticationResult result = app.acquireTokenSilently(silentParameters).join();
 
             return result.accessToken() != null;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             // No cached token exists, or it's expired with no refresh
             return false;
         }
@@ -68,7 +55,8 @@ public class AuthService {
             IAuthenticationResult result = app.acquireTokenSilently(silentParameters).join();
 
             return result.accessToken();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             // No cached token exists, or it's expired with no refresh
             throw new RuntimeException("Failure while acquiring token", e);
         }
@@ -79,12 +67,15 @@ public class AuthService {
      * @return Authorization URL as a String
      */
     public String getAuthorizationUrl() {
-        AuthorizationRequestUrlParameters parameters =
-                AuthorizationRequestUrlParameters
-                        .builder("http://localhost:8080/taskApi/auth/redirect",
-                                Set.of("User.Read", "Tasks.ReadWrite", "offline_access"))
-                        .responseMode(ResponseMode.QUERY)
-                        .build();
+        AuthorizationRequestUrlParameters parameters = AuthorizationRequestUrlParameters
+                .builder("http://localhost:8080/taskApi/auth/redirect",
+                        Set.of("User.Read", "Tasks.ReadWrite", "offline_access"))
+                .responseMode(ResponseMode.QUERY)
+                .extraQueryParameters(Map.of(
+                        "response_type", "code",
+                        "client_id", authDTO.clientId()
+                ))
+                .build();
 
         return app.getAuthorizationRequestUrl(parameters).toString();
     }
@@ -115,7 +106,7 @@ public class AuthService {
 
             return app.acquireToken(params).get();
         }
-        catch(Exception e) {
+        catch (Exception e) {
             throw new RuntimeException("Code not verified by Azure", e);
         }
     }

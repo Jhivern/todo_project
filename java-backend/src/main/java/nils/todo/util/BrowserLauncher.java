@@ -12,7 +12,9 @@ public class BrowserLauncher {
     public static void open(String url) {
         try {
             System.out.println("Opening browser to url: " + url);
-            Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", url});
+            Runtime.getRuntime().exec(new String[]{
+                    "cmd", "/c", "start", "\"\"", "\"" + url + "\""
+            });
         }
         catch (IOException e) {
             throw new RuntimeException("Failed to open browser", e);
