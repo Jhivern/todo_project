@@ -16,9 +16,7 @@ In addition, the Java backend also requires a JSON config file for authenticatio
 {
   "clientId": "your-client-id",
   "clientSecret": "your-client-secret",
-  "tenantId": "your-tenant-id",
-  "accessToken": "your-access-token",
-  "refreshToken": "your-refresh-token"
+  "tenantId": "your-tenant-id"
 }
 ```
 

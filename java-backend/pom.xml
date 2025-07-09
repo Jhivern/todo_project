@@ -11,7 +11,7 @@
     <groupId>nils.todo</groupId>
     <artifactId>springweb</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springweb</name>
+    <name>todo_project</name>
     <description>Spring web for rest api</description>
     <url/>
     <licenses>

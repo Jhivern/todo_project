@@ -1,7 +1,11 @@
-package nils.todo;
+package nils.todo.services;
 
 import com.google.inject.Singleton;
 import com.microsoft.aad.msal4j.*;
+import nils.todo.config.AuthConfigLoader;
+import nils.todo.config.AuthDTO;
+import nils.todo.util.BrowserLauncher;
+import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.io.IOException;
@@ -11,18 +15,18 @@ import java.net.URISyntaxException;
 import java.util.Set;
 
 @Singleton
+@Service
 public class AuthService {
     private final AuthDTO authDTO;
-
-    //
     private final ConfidentialClientApplication app;
 
     /**
-     *  Constructor for AuthService
+     *  Constructor for AuthService.
      * @param authConfigLoader Controls initial access to the config file
      */
-    public AuthService(AuthConfigLoader authConfigLoader) {
-        this.authDTO = authConfigLoader.loadConfig();
+    public AuthService(AuthConfigLoader authConfigLoader, ConfidentialClientApplication app) {
+        this.app = app;
+        this.authDTO = authConfigLoader.readConfig();
         try {
             app = ConfidentialClientApplication.builder(authDTO.clientId(),
                             ClientCredentialFactory.createFromSecret(authDTO.clientSecret()))
@@ -52,6 +56,25 @@ public class AuthService {
     }
 
     /**
+     * Direct token access for MSGraphService
+     * @return The token which grants access to the MS account
+     */
+    public String getAccessToken() {
+        try {
+            SilentParameters silentParameters = SilentParameters
+                    .builder(Set.of("User.Read", "Tasks.ReadWrite", "offline_access"))
+                    .build();
+
+            IAuthenticationResult result = app.acquireTokenSilently(silentParameters).join();
+
+            return result.accessToken();
+        } catch (Exception e) {
+            // No cached token exists, or it's expired with no refresh
+            throw new RuntimeException("Failure while acquiring token", e);
+        }
+    }
+
+    /**
      * Gets the authorization URL the user has to navigate to
      * @return Authorization URL as a String
      */
@@ -75,20 +98,8 @@ public class AuthService {
             throw new IllegalArgumentException("URL must not be null or empty");
         }
 
-        if (!Desktop.isDesktopSupported() || !Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-            throw new UnsupportedOperationException("Platform does not support desktop browsing");
-        }
+        BrowserLauncher.open(url);
 
-        try {
-            URI uri = new URI(url);
-            Desktop.getDesktop().browse(uri);
-        }
-        catch (IOException | UnsupportedOperationException e) {
-            throw new RuntimeException("Failure while opening browser", e);
-        }
-        catch (URISyntaxException e) {
-            throw new RuntimeException("URL contains invalid syntax: " + url, e);
-        }
     }
 
     /**

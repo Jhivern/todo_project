@@ -1,17 +1,18 @@
-package nils.todo;
+package nils.todo.controllers;
 
 import com.google.inject.Inject;
+import nils.todo.services.AuthService;
+import nils.todo.services.MSGraphService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/taskAPI/tasks")
+@RequestMapping("/taskApi/tasks")
 public class MSGraphController {
 
     private final MSGraphService graphService;

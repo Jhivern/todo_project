@@ -1,4 +1,4 @@
-package nils.todo;
+package nils.todo.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Singleton;
@@ -13,7 +13,7 @@ public class AuthConfigLoader {
     ObjectMapper mapper = new ObjectMapper();
 
     // read information from auth.json
-    public AuthDTO loadConfig() {
+    public AuthDTO readConfig() {
         try {
             return mapper.readValue(Files.newBufferedReader(path), AuthDTO.class);
         } catch (Exception e) {
