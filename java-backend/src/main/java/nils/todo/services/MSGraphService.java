@@ -28,9 +28,11 @@ public class MSGraphService {
      */
     public String getTaskListID(String displayName) {
         // Perform the GET request
+        String token = authService.getAccessToken();
+        System.out.println("Authorization: Bearer " + token);
         String responseBody = client.get()
-                .uri("/todo/lists")
-                .header("Authorization", "Bearer " + authService.getAccessToken())
+                .uri("/me/todo/lists")
+                .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .body(String.class);
 
@@ -43,6 +45,8 @@ public class MSGraphService {
             // Check if the displayName is found
             for (JsonNode list : lists) {
                 if (list.get("displayName").asText().equals(displayName)) {
+                    System.out.println("Found id for: " + displayName);
+                    System.out.println(list.get("id").asText());
                     return list.get("id").asText();
                 }
             }

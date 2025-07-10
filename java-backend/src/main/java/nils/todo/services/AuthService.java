@@ -28,8 +28,9 @@ public class AuthService {
 
     public boolean hasValidToken() {
         try {
+            IAccount account = app.getAccounts().join().iterator().next();
             SilentParameters silentParameters = SilentParameters
-                    .builder(Set.of("User.Read", "Tasks.ReadWrite", "offline_access"))
+                    .builder(Set.of("User.Read", "Tasks.ReadWrite", "offline_access"), account)
                     .build();
 
             IAuthenticationResult result = app.acquireTokenSilently(silentParameters).join();
@@ -48,8 +49,9 @@ public class AuthService {
      */
     public String getAccessToken() {
         try {
+            IAccount account = app.getAccounts().join().iterator().next();
             SilentParameters silentParameters = SilentParameters
-                    .builder(Set.of("User.Read", "Tasks.ReadWrite", "offline_access"))
+                    .builder(Set.of("User.Read", "Tasks.ReadWrite", "offline_access"), account)
                     .build();
 
             IAuthenticationResult result = app.acquireTokenSilently(silentParameters).join();
@@ -98,13 +100,13 @@ public class AuthService {
      * @param code The code gotten from MS login
      * @return The authentication token (wrapped in a class)
      */
-    public IAuthenticationResult acquireTokenFromCode(String code) {
+    public boolean acquireTokenFromCode(String code) {
         try {
             AuthorizationCodeParameters params = AuthorizationCodeParameters
                     .builder(code, new URI("http://localhost:8080/taskApi/auth/redirect"))
                     .build();
 
-            return app.acquireToken(params).get();
+            return app.acquireToken(params).get() != null;
         }
         catch (Exception e) {
             throw new RuntimeException("Code not verified by Azure", e);

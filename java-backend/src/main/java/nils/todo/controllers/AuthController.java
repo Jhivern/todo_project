@@ -42,8 +42,14 @@ public class AuthController {
     @GetMapping("/redirect")
     public ResponseEntity<String> redirect(@RequestParam String code) {
         try {
-            IAuthenticationResult result = authService.acquireTokenFromCode(code);
-            return ResponseEntity.ok().build();
+            // Save code into MSAL
+            authService.acquireTokenFromCode(code);
+            if (authService.hasValidToken()) {
+                return ResponseEntity.ok().build();
+            }
+            else {
+                throw new RuntimeException("Token was not properly obtained or stored via code");
+            }
         }
         catch (Exception e) {
             System.err.println("Azure rejected the token\n" + e.getMessage());

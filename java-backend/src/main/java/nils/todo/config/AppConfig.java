@@ -24,7 +24,8 @@ public class AppConfig {
         return ConfidentialClientApplication.builder(
                         authDTO.clientId(),
                         ClientCredentialFactory.createFromSecret(authDTO.clientSecret()))
-                .authority("https://login.microsoftonline.com/" + authDTO.tenantId())
+                .authority("https://login.microsoftonline.com/consumers" //+ authDTO.tenantId()
+                         )
                 .build();
     }
 
@@ -32,7 +33,7 @@ public class AppConfig {
     public RestClient restClient() {
         System.out.println("RestClient instantiated!");
         return RestClient.builder()
-                .baseUrl("https://graph.microsoft.com/v1.0/me")
+                .baseUrl("https://graph.microsoft.com/v1.0")
                 .build();
     }
 }
