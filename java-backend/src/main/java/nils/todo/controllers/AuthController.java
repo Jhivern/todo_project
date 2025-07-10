@@ -20,8 +20,9 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // Initial portal for users to log in
-    // !! Let this be done by MSGraphService!!
+    /**
+     * Initial portal for users to log in
+     */
     @GetMapping("/login")
     public void login() {
         try {

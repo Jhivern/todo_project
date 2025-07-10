@@ -7,7 +7,10 @@ import com.google.inject.Singleton;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Singleton
 @Service
@@ -15,6 +18,11 @@ public class MSGraphService {
     private final AuthService authService;
     private final RestClient client;
 
+    /**
+     * Constructor for MSGraphService
+     * @param authService The AuthService class, used for getting credentials
+     * @param client The client with which we make HTTP requests
+     */
     @Inject
     public MSGraphService(AuthService authService, RestClient client) {
         this.authService =  authService;
@@ -66,21 +74,35 @@ public class MSGraphService {
      */
     public List<String> getTop2Tasks(String id) {
         // Make a call to MSGraph
-        RestClient client = RestClient.builder()
-                .baseUrl("https://graph.microsoft.com/v1.0/me")
-                .build();
+        String token = authService.getAccessToken();
+        System.out.println("Authorization: Bearer " + token);
+        String responseBody = client.get()
+                .uri("/me/todo/lists/" + id + "/tasks?$filter=status ne 'completed'")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .body(String.class);
+        // Get the titles from response
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(responseBody);
+            JsonNode lists = root.get("value");
 
+            // Add each title into a list
+            List<String> taskList = new ArrayList<>();
+            for (JsonNode list : lists) {
+                taskList.add(list.get("title").asText());
+            }
 
-        // Parse titles
-        return null;
-    }
+            // Sort the taskList based on the order given in String
+            Collections.sort(taskList);
 
-    /**
-     * Parse JSON received by MSGraph API
-     * @param json The incoming JSON, from which we grab the title
-     * @return String with the title field from the JSON
-     */
-    public String parseTitle(String json) {
-        return null;
+            // The list was not found
+            return taskList.stream()
+                    .limit(2)
+                    .toList();
+        }
+        catch (JsonProcessingException e) {
+            throw new RuntimeException("Failure while processing JSON", e);
+        }
     }
 }

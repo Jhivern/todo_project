@@ -18,7 +18,7 @@ public class AuthService {
     private final ConfidentialClientApplication app;
 
     /**
-     *  Constructor for AuthService.
+     * Constructor for AuthService.
      * @param authConfigLoader Controls initial access to the config file
      */
     public AuthService(AuthConfigLoader authConfigLoader, ConfidentialClientApplication app) {
@@ -26,6 +26,10 @@ public class AuthService {
         this.authDTO = authConfigLoader.readConfig();
     }
 
+    /**
+     * Checks if MSAL has a valid token and is authenticated
+     * @return Boolean if we are authenticated
+     */
     public boolean hasValidToken() {
         try {
             IAccount account = app.getAccounts().join().iterator().next();

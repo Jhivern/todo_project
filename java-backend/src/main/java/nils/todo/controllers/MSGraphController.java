@@ -18,6 +18,11 @@ public class MSGraphController {
     private final MSGraphService graphService;
     private final AuthService authService;
 
+    /**
+     * Constructor for MSGraphController
+     * @param graphService The GMSGraphService class, used for interacting with the MSGraph API
+     * @param authService The AuthService class, used for getting credentials
+     */
     @Inject
     public MSGraphController(MSGraphService graphService, AuthService authService) {
         this.graphService = graphService;
