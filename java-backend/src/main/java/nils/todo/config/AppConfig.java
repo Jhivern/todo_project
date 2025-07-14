@@ -30,7 +30,7 @@ public class AppConfig {
     @Bean
     public ConfidentialClientApplication confidentialClientApplication(AuthConfigLoader loader) throws MalformedURLException {
         System.out.println("ConfidentialClientApplication instantiated!");
-        AuthDTO authDTO = loader.readConfig();
+        AuthDTO authDTO = loader.getAuthDTO();
         return ConfidentialClientApplication.builder(
                         authDTO.clientId(),
                         ClientCredentialFactory.createFromSecret(authDTO.clientSecret()))

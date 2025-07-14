@@ -42,6 +42,9 @@ public class MSGraphController {
         }
         // Call MSGraphService, since we know it's authenticated
         String id = graphService.getTaskListID(name);
+        if (id == null) {
+            return ResponseEntity.badRequest().body(List.of("List not found..."));
+        }
         return ResponseEntity.ok().body(graphService.getTop2Tasks(id));
     }
 

@@ -12,16 +12,28 @@ public class AuthConfigLoader {
     Path path = Paths.get("auth.json");
     ObjectMapper mapper = new ObjectMapper();
 
+    AuthDTO authDTO = null;
+
     /**
      * Read information from auth.json
      * @return A populated AuthDTO object
      */
-    public AuthDTO readConfig() {
+    public void readConfig() {
         try {
-            return mapper.readValue(Files.newBufferedReader(path), AuthDTO.class);
+            this.authDTO = mapper.readValue(Files.newBufferedReader(path), AuthDTO.class);
         } catch (Exception e) {
             throw new RuntimeException("Failure while parsing auth.json", e);
         }
     }
 
+    /**
+     * Getter for the authDTO
+     * @return The stored AuthDTO object
+     */
+    public AuthDTO getAuthDTO() {
+        if (authDTO == null) {
+            readConfig();
+        }
+        return authDTO;
+    }
 }

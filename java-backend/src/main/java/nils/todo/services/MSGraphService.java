@@ -46,25 +46,28 @@ public class MSGraphService {
 
         // Parse list ID from the response
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(responseBody);
-            JsonNode lists = root.get("value");
-
-            // Check if the displayName is found
-            for (JsonNode list : lists) {
-                if (list.get("displayName").asText().equals(displayName)) {
-                    System.out.println("Found id for: " + displayName);
-                    System.out.println(list.get("id").asText());
-                    return list.get("id").asText();
-                }
-            }
-
-            // The list was not found
-            return null;
+            return extractIdFromJSON(displayName, responseBody);
         }
         catch (JsonProcessingException e) {
             throw new RuntimeException("Failure while processing JSON", e);
         }
+    }
+
+    private String extractIdFromJSON(String displayName, String responseBody) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(responseBody);
+        JsonNode lists = root.get("value");
+
+        // Check if the displayName is found
+        for (JsonNode list : lists) {
+            if (list.get("displayName").asText().equals(displayName)) {
+                System.out.println("Found id for: " + displayName);
+                System.out.println(list.get("id").asText());
+                return list.get("id").asText();
+            }
+        }
+        // The list was not found
+        return null;
     }
 
     /**
@@ -83,26 +86,30 @@ public class MSGraphService {
                 .body(String.class);
         // Get the titles from response
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(responseBody);
-            JsonNode lists = root.get("value");
-
-            // Add each title into a list
-            List<String> taskList = new ArrayList<>();
-            for (JsonNode list : lists) {
-                taskList.add(list.get("title").asText());
-            }
-
-            // Sort the taskList based on the order given in String
-            Collections.sort(taskList);
-
-            // The list was not found
-            return taskList.stream()
-                    .limit(2)
-                    .toList();
+            return extractTasksFromJSON(responseBody);
         }
         catch (JsonProcessingException e) {
             throw new RuntimeException("Failure while processing JSON", e);
         }
+    }
+
+    private List<String> extractTasksFromJSON(String responseBody) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(responseBody);
+        JsonNode lists = root.get("value");
+
+        // Add each title into a list
+        List<String> taskList = new ArrayList<>();
+        for (JsonNode list : lists) {
+            taskList.add(list.get("title").asText());
+        }
+
+        // Sort the taskList based on the order given in String
+        Collections.sort(taskList);
+
+        // The list was not found
+        return taskList.stream()
+                .limit(2)
+                .toList();
     }
 }
