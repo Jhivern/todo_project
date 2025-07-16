@@ -3,7 +3,6 @@ package nils.todo.services;
 import com.google.inject.Singleton;
 import com.microsoft.aad.msal4j.*;
 import nils.todo.config.AuthConfigLoader;
-import nils.todo.config.AuthDTO;
 import nils.todo.util.BrowserLauncher;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,7 @@ import java.util.Set;
 @Singleton
 @Service
 public class AuthService {
-    private final AuthDTO authDTO;
+    private final AuthConfigLoader loader;
     private final ConfidentialClientApplication app;
 
     /**
@@ -23,7 +22,7 @@ public class AuthService {
      */
     public AuthService(AuthConfigLoader authConfigLoader, ConfidentialClientApplication app) {
         this.app = app;
-        this.authDTO = authConfigLoader.readConfig();
+        this.loader = authConfigLoader;
     }
 
     /**
@@ -79,7 +78,7 @@ public class AuthService {
                 .responseMode(ResponseMode.QUERY)
                 .extraQueryParameters(Map.of(
                         "response_type", "code",
-                        "client_id", authDTO.clientId()
+                        "client_id", loader.getAuthDTO().clientId()
                 ))
                 .build();
 
@@ -104,13 +103,14 @@ public class AuthService {
      * @param code The code gotten from MS login
      * @return The authentication token (wrapped in a class)
      */
-    public boolean acquireTokenFromCode(String code) {
+    public void acquireTokenFromCode(String code) {
         try {
             AuthorizationCodeParameters params = AuthorizationCodeParameters
                     .builder(code, new URI("http://localhost:8080/taskApi/auth/redirect"))
                     .build();
 
-            return app.acquireToken(params).get() != null;
+            // Save token in MSAL cache
+            app.acquireToken(params).get();
         }
         catch (Exception e) {
             throw new RuntimeException("Code not verified by Azure", e);

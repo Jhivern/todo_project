@@ -45,6 +45,17 @@ public class MSGraphService {
                 .body(String.class);
 
         // Parse list ID from the response
+        return extractIdFromJSON(displayName, responseBody);
+
+    }
+
+    /**
+     * Extracts the id of the list, given the displayName
+     * @param displayName The name of the list requested
+     * @param responseBody The response of MSGraph in JSON
+     * @return The internal ID of the list
+     */
+    private String extractIdFromJSON(String displayName, String responseBody) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(responseBody);
@@ -58,7 +69,6 @@ public class MSGraphService {
                     return list.get("id").asText();
                 }
             }
-
             // The list was not found
             return null;
         }
@@ -72,8 +82,12 @@ public class MSGraphService {
      * @param id The id of the taskList
      * @return List of the top 2 tasks
      */
+    // What if id is wrong? We get a notFound back, but never check it...
     public List<String> getTop2Tasks(String id) {
         // Make a call to MSGraph
+        if (id == null) {
+            throw new IllegalArgumentException("ID must not be null");
+        }
         String token = authService.getAccessToken();
         System.out.println("Authorization: Bearer " + token);
         String responseBody = client.get()
@@ -82,10 +96,22 @@ public class MSGraphService {
                 .retrieve()
                 .body(String.class);
         // Get the titles from response
+        return extractTasksFromJSON(responseBody);
+    }
+
+    /**
+     * Extracts the tasks from the responseBody
+     * @param responseBody The JSON which contains tasks
+     * @return The tasks in a list
+     */
+    private List<String> extractTasksFromJSON(String responseBody) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(responseBody);
             JsonNode lists = root.get("value");
+            if (lists == null) {
+                throw new RuntimeException("No JSON array names 'values' found");
+            }
 
             // Add each title into a list
             List<String> taskList = new ArrayList<>();

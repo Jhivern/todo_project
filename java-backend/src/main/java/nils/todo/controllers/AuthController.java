@@ -66,7 +66,8 @@ public class AuthController {
     public ResponseEntity<Void> checkAuthStatus() {
         if (authService.hasValidToken()) {
             return ResponseEntity.ok().build();
-        } else {
+        }
+        else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
