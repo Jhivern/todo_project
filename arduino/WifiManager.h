@@ -1,10 +1,10 @@
 #ifndef WIFIMANAGER_H
 #define WIFIMANAGER_H
 
-class WifiManager {
+namespace WifiManager {
   // Add later method definitions here
   public:
-    WifiManager();
+    WifiManager(char* ssid, char* password);
     bool begin();
     bool isOnline();
 };
