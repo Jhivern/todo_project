@@ -4,7 +4,7 @@
 #include "WifiManager.h"
 
 
-namespace APIController {
+class APIController {
   // Add later method definitions here
   public:
     APIController(WifiManager& wifiRef);

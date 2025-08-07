@@ -1,7 +1,7 @@
 #ifndef DEVICECONTROLLER_H
 #define DEVICECONTROLLER_H
 
-namespace DeviceController {
+class DeviceController {
   // Add later method definitions here
   public:
     DeviceController();
