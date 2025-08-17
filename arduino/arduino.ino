@@ -4,6 +4,7 @@
 
 void setup() {
   // put your setup code here, to run once:
+  // Initialize objects
 
 }
 
