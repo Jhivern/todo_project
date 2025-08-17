@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#define MAX_TASK_LENGTH 33 // 32 + 1 for null terminator
+static constexpr size_t MAX_TASK_LENGTH = 33; // 32 chars + null terminator
 
 struct Top2Items {
     char task1[MAX_TASK_LENGTH];
