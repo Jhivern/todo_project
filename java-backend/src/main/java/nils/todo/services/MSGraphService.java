@@ -96,7 +96,16 @@ public class MSGraphService {
                 .retrieve()
                 .body(String.class);
         // Get the titles from response
-        return extractTasksFromJSON(responseBody);
+        List<String> taskList = new ArrayList<>(extractTasksFromJSON(responseBody));
+        for (int i = 0; i < taskList.size(); i++) {
+            if (taskList.get(i).length() > 32) {
+                // Strip it down to 32 characters
+                String task = taskList.get(i);
+                task = task.substring(0, 32);
+                taskList.set(i, task);
+            }
+        }
+        return taskList;
     }
 
     /**
