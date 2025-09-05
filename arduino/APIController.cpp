@@ -10,7 +10,6 @@ APIController::APIController(WifiManager& wifi) : wifi(wifi) {
 }
 
 bool APIController::begin() {
-  // Add later method implementation here
   if (!wifi.isOnline()) {
     return wifi.begin();
   }
