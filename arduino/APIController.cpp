@@ -16,21 +16,30 @@ bool APIController::begin() {
   return true;
 }
 
-std::optional<Top2Items> APIController::getTasks(HTTPClient http) {
+std::optional<Top2Items> APIController::getTasks(HTTPClient& http) {
   Top2Items tasks;
   
   // Set up the internet connection
+  Serial.begin(115200);
+  Serial.println("Checking WiFi status");
   if (!wifi.isOnline()) {
+    Serial.println("Trying to reconnect...");
     if (!wifi.begin()) {
+      Serial.println("Wifi connection failed");
       // Return an error
       return std::nullopt;
     }
   }
 
   // We have internet, now start sending!
-  http.begin("localhost:8080/taskApi/tasks?name=My%20Day");
+  Serial.println("Begin sending the Request!");
+  http.begin("http://10.78.189.245:8080/taskApi/tasks?name=My%20Day");
+  Serial.println("Finished request/response sequence");
   int httpCode = http.GET();
+  Serial.println(httpCode);
   if (httpCode != 200) {
+    Serial.println("Code was not good :(");
+    Serial.println(httpCode);
     return std::nullopt;
   }
   else {

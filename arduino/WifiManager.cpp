@@ -13,21 +13,25 @@ bool WifiManager::begin() {
     return true;
   }
 
-  Serial.begin(9600);
-  Serial.print("Connecting to wifi");
+  Serial.begin(115200);
+  Serial.print("\nConnecting to wifi");
   WiFi.begin(ssid, password);
 
   // Try to connect
   short retries = 0;
+  unsigned long lastAttempt = millis();
   while (WiFi.status() != WL_CONNECTED && retries < 20) {
-    retries++;
-    delay(500);
-    Serial.print(".");
-  }
+    if (millis() - lastAttempt >= 500) {
+        lastAttempt = millis();
+        retries++;
+        Serial.print(".");
+    }
+    // ESP32 background tasks continue here
+}
 
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("\nConnection failed.");
-    Serial.end();
+    // Serial.end();
     return false;
   }
 
@@ -36,7 +40,7 @@ bool WifiManager::begin() {
   Serial.println(WiFi.localIP());
 
   // Close serial
-  Serial.end();
+  // Serial.end();
 
   return true;
 }

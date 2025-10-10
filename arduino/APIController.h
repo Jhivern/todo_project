@@ -11,7 +11,7 @@ class APIController {
   public:
     APIController(WifiManager& wifi); // Initialize with a WifiManager object field
     bool begin(); // Make sure internet connection is set up
-    std::optional<Top2Items> getTasks(HTTPClient http); // Perform the GET request and get the data
+    std::optional<Top2Items> getTasks(HTTPClient& http); // Perform the GET request and get the data
   private:
     WifiManager& wifi;
 };
