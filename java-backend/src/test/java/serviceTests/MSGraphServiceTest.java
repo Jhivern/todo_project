@@ -1,7 +1,7 @@
 package serviceTests;
 
 import nils.todo.services.AuthService;
-import nils.todo.services.MSGraphParser;
+import nils.todo.util.MSGraphParser;
 import nils.todo.services.MSGraphService;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestClient;

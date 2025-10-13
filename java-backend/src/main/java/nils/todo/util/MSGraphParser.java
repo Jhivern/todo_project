@@ -1,4 +1,4 @@
-package nils.todo.services;
+package nils.todo.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
