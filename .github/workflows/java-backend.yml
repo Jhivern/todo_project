@@ -4,9 +4,9 @@ on:
   push:
     paths:
       - 'java-backend/**'
-  pull_request:
-    paths:
-      - 'java-backend/**'
+  # pull_request:
+  #   paths:
+  #     - 'java-backend/**'
   workflow_dispatch:
   
 jobs:
