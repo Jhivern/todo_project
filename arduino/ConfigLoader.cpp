@@ -2,6 +2,7 @@
 #include <SPIFFS.h> // File manager, since we dont have an OS
 #include <ArduinoJson.h>
 
+
 ConfigLoader::ConfigLoader(const char* path) {
   // Initialize SPIFFS here
   if (!SPIFFS.begin()) {
