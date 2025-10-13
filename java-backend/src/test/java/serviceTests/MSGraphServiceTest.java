@@ -1,12 +1,11 @@
 package serviceTests;
 
 import nils.todo.services.AuthService;
+import nils.todo.services.MSGraphParser;
 import nils.todo.services.MSGraphService;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.client.RestClient;
 
-import java.net.URI;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +14,8 @@ import static org.mockito.Mockito.*;
 public class MSGraphServiceTest {
     AuthService authService = mock(AuthService.class);
     RestClient client = mock(RestClient.class);
-    MSGraphService graphService = new MSGraphService(authService, client);
+    MSGraphParser msGraphParser = mock(MSGraphParser.class);
+    MSGraphService graphService = new MSGraphService(authService, client, msGraphParser);
 
     // getTaskListID() tests
     // Null test
@@ -118,6 +118,7 @@ public class MSGraphServiceTest {
         when(uriSpec.header(anyString(), anyString())).thenReturn(headersSpec);
         when(headersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.body(String.class)).thenReturn(responseBody);
+        when(msGraphParser.extractIdFromJSON("Tasks", responseBody)).thenReturn("validID");
 
         // Assert
         assertEquals("validID", graphService.getTaskListID("Tasks"));
@@ -196,6 +197,7 @@ public class MSGraphServiceTest {
         when(uriSpec.header(anyString(), anyString())).thenReturn(headersSpec);
         when(headersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.body(String.class)).thenReturn(responseBody);
+        when(msGraphParser.extractIdFromJSON("My Day", responseBody)).thenReturn("validId2");
 
         // Assert
         assertEquals("validId2", graphService.getTaskListID("My Day"));
@@ -217,6 +219,7 @@ public class MSGraphServiceTest {
         when(uriSpec.header(anyString(), anyString())).thenReturn(headersSpec);
         when(headersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.body(String.class)).thenReturn(responseBody);
+        when(msGraphParser.extractIdFromJSON("Tasks", responseBody)).thenThrow(RuntimeException.class);
 
         // Assert
         assertThrows(RuntimeException.class, () -> graphService.getTaskListID("Tasks"));
@@ -357,6 +360,7 @@ public class MSGraphServiceTest {
         when(uriSpec.header(anyString(), anyString())).thenReturn(headersSpec);
         when(headersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.body(String.class)).thenReturn(responseBody);
+        when(msGraphParser.extractTasksFromJSON(responseBody)).thenThrow(RuntimeException.class);
 
         // Assert
         assertThrows(RuntimeException.class, () -> graphService.getTop2Tasks("validId"));
@@ -433,6 +437,7 @@ public class MSGraphServiceTest {
         when(uriSpec.header(anyString(), anyString())).thenReturn(headersSpec);
         when(headersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.body(String.class)).thenReturn(responseBody);
+        when(msGraphParser.extractTasksFromJSON(responseBody)).thenReturn(List.of("test 1", "test 2"));
 
         // Assert
         assertEquals(List.of("test 1", "test 2"), graphService.getTop2Tasks("validId"));
@@ -454,6 +459,7 @@ public class MSGraphServiceTest {
         when(uriSpec.header(anyString(), anyString())).thenReturn(headersSpec);
         when(headersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.body(String.class)).thenReturn(responseBody);
+        when(msGraphParser.extractTasksFromJSON(responseBody)).thenThrow(RuntimeException.class);
 
         // Assert
         assertThrows(RuntimeException.class, () -> graphService.getTop2Tasks("validId"));

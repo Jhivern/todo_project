@@ -1,7 +1,6 @@
 package nils.todo.controllers;
 
 import com.google.inject.Inject;
-import com.microsoft.aad.msal4j.IAuthenticationResult;
 import nils.todo.services.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
