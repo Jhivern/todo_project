@@ -1,5 +1,6 @@
 #include "WifiManager.h"
 #include <WiFi.h>
+
 // Include the config file later
 WifiManager::WifiManager(const char* ssid, const char* password) 
   : ssid(ssid), password(password)

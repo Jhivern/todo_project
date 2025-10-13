@@ -33,7 +33,7 @@ std::optional<Top2Items> APIController::getTasks(HTTPClient& http) {
 
   // We have internet, now start sending!
   Serial.println("Begin sending the Request!");
-  http.begin("http://10.78.189.245:8080/taskApi/tasks?name=My%20Day");
+  http.begin("http://ip-address:8080/taskApi/tasks?name=My%20Day");
   Serial.println("Finished request/response sequence");
   int httpCode = http.GET();
   Serial.println(httpCode);
@@ -55,7 +55,8 @@ std::optional<Top2Items> APIController::getTasks(HTTPClient& http) {
 
     JsonArray arr = jsonDoc.as<JsonArray>();
     if (arr.size() < 2) {
-       return std::nullopt;
+      Serial.println("Error: Less than 2 tasks received");
+      return std::nullopt;
     }
 
     // Copy strings into char[] buffers
@@ -74,4 +75,3 @@ std::optional<Top2Items> APIController::getTasks(HTTPClient& http) {
 
   return tasks;
 }
-
