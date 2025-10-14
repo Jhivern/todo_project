@@ -1,4 +1,6 @@
-import nils.todo.services.MSGraphParser;
+package utilTests;
+
+import nils.todo.util.MSGraphParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package nils.todo.services;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import nils.todo.util.MSGraphParser;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
