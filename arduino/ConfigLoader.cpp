@@ -57,3 +57,8 @@ const char* ConfigLoader::getSsid() {
 const char* ConfigLoader::getPassword() {
   return password;
 }
+
+// Get configStatus
+ConfigStatus ConfigLoader::getConfigStatus() {
+  return configStatus;
+}
