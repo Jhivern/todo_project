@@ -33,7 +33,7 @@ std::optional<Top2Items> APIController::getTasks(HTTPClient& http) {
 
   // We have internet, now start sending!
   Serial.println("Begin sending the Request!");
-  http.begin("http://ip-address:8080/taskApi/tasks?name=My%20Day");
+  http.begin("http://192.168.1.3:8080/taskApi/tasks?name=My%20Day");
   Serial.println("Finished request/response sequence");
   int httpCode = http.GET();
   Serial.println(httpCode);
