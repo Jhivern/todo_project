@@ -16,12 +16,13 @@ bool WifiManager::begin() {
 
   Serial.begin(115200);
   Serial.print("\nConnecting to wifi");
+
   WiFi.begin(ssid, password);
 
   // Try to connect
   short retries = 0;
   unsigned long lastAttempt = millis();
-  while (WiFi.status() != WL_CONNECTED && retries < 20) {
+  while (WiFi.status() != WL_CONNECTED && retries < 40) {
     if (millis() - lastAttempt >= 500) {
         lastAttempt = millis();
         retries++;
