@@ -24,6 +24,7 @@ std::optional<Top2Items> APIController::getTasks(HTTPClient& http) {
   Serial.println("Checking WiFi status");
   if (!wifi.isOnline()) {
     Serial.println("Trying to reconnect...");
+    Serial.print(">> wifiManager.begin() called");
     if (!wifi.begin()) {
       Serial.println("Wifi connection failed");
       // Return an error

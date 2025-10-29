@@ -13,16 +13,13 @@ bool DeviceController::begin() {
   return true;
 }
 
-// Write content to top line of LCD display
-void DeviceController::writeLine0(const char* input) {
-    lcd.setCursor(0, 0);
-    lcd.print(input);
-}
-
-// Write content to bottom lone of LCD display
-void DeviceController::writeLine1(const char* input) {
-    lcd.setCursor(0, 1);
-    lcd.print(input);
+// Write content to both lines of LCD display
+void DeviceController::writeLines(const char* input1, const char* input2) {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(input1);
+  lcd.setCursor(0, 1);
+  lcd.print(input2);
 }
 
 // Clear the LCD screen
