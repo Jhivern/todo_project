@@ -7,7 +7,8 @@ class DeviceController {
   public:
     DeviceController();
     bool begin();
-    void writeLines(const char* input1, const char* input2);
+    void writeLine1(const char* input);
+    void writeLine2(const char* input);
     void clearLCD();
 
   private:
