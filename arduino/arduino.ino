@@ -60,12 +60,22 @@ void handleIdle() {
 }
 
 void handleSync() {
-  std::optional<Top2Items> items = apiController.getTasks(client);
-  Top2Items tasks = items.value_or(Top2Items{"Failed", "Failed"});
+    static char* lastTask1 = "";
+    static char* lastTask2 = "";
+    std::optional<Top2Items> items = apiController.getTasks(client);
+    Top2Items tasks = items.value_or(Top2Items{"Failed", "Failed"});
 
-  // Always set cursor before writing
-  deviceController.clearLCD();
-  deviceController.writeLines(tasks.task1, tasks.task2);
+    // Check if data has changed, and if so write it to screen
+    if (strcmp(lastTask1, tasks.task1) != 0) {
+        lastTask1 = tasks.task1;
+        deviceController.writeLine1(tasks.task1);
+    }
 
-  nextState = IDLE;
+    if (strcmp(lastTask2, tasks.task2) != 0) {
+        lastTask2 = tasks.task2;
+        deviceController.writeLine2(tasks.task2);
+    }
+
+    // Set the next state
+    nextState = IDLE;
 }
