@@ -1,6 +1,7 @@
 package nils.todo.controllers;
 
 import com.google.inject.Inject;
+import nils.todo.facades.AuthFacade;
 import nils.todo.services.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("taskApi/auth")
 public class AuthController {
-    private final AuthService authService;
+    private final AuthFacade authFacade;
 
     @Inject
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    public AuthController(AuthFacade authFacade) {
+        this.authFacade = authFacade;
     }
 
     /**
@@ -25,8 +26,7 @@ public class AuthController {
     @GetMapping("/login")
     public void login() {
         try {
-            String authUrl = authService.getAuthorizationUrl();
-            authService.launchBrowser(authUrl);
+            authFacade.startLoginFlow();
         }
         catch (Exception e) {
             System.err.println("Failure while creating authorization URL\n" + e.getMessage());
@@ -43,8 +43,8 @@ public class AuthController {
     public ResponseEntity<String> redirect(@RequestParam String code) {
         try {
             // Save code into MSAL
-            authService.acquireTokenFromCode(code);
-            if (authService.hasValidToken()) {
+            authFacade.completeLogin(code);
+            if (authFacade.hasValidToken()) {
                 return ResponseEntity.ok().build();
             }
             else {
@@ -63,7 +63,7 @@ public class AuthController {
      */
     @GetMapping("/status")
     public ResponseEntity<Void> checkAuthStatus() {
-        if (authService.hasValidToken()) {
+        if (authFacade.hasValidToken()) {
             return ResponseEntity.ok().build();
         }
         else {

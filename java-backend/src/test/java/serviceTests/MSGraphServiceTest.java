@@ -1,6 +1,6 @@
 package serviceTests;
 
-import nils.todo.services.AuthService;
+import nils.todo.facades.AuthFacade;
 import nils.todo.util.MSGraphParser;
 import nils.todo.services.MSGraphService;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class MSGraphServiceTest {
-    AuthService authService = mock(AuthService.class);
+    AuthFacade authFacade = mock(AuthFacade.class);
     RestClient client = mock(RestClient.class);
     MSGraphParser msGraphParser = mock(MSGraphParser.class);
-    MSGraphService graphService = new MSGraphService(authService, client, msGraphParser);
+    MSGraphService graphService = new MSGraphService(authFacade, client, msGraphParser);
 
     // getTaskListID() tests
     // Null test
