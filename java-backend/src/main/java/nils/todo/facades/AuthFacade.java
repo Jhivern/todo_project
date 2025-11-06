@@ -15,7 +15,7 @@ public class AuthFacade {
 
     public String startLoginFlow() {
         String authUrl = authService.getAuthorizationUrl();
-        BrowserLauncher.open(authUrl);
+        authService.launchBrowser(authUrl);
         return authUrl;
     }
 
