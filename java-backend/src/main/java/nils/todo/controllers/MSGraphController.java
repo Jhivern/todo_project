@@ -38,6 +38,8 @@ public class MSGraphController {
     public ResponseEntity<List<String>> getTop2Tasks(@RequestParam String name) {
         // Check if the server is ready to handle requests
         if (!authFacade.hasValidToken()) {
+            // Prompt the user to log in via browser
+            authFacade.startLoginFlow();
             return ResponseEntity.status(401).build();
         }
         // Call MSGraphService, since we know it's authenticated
