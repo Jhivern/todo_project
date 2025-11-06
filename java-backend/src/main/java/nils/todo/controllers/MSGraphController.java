@@ -1,7 +1,7 @@
 package nils.todo.controllers;
 
 import com.google.inject.Inject;
-import nils.todo.services.AuthService;
+import nils.todo.facades.AuthFacade;
 import nils.todo.services.MSGraphService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,17 +16,17 @@ import java.util.List;
 public class MSGraphController {
 
     private final MSGraphService graphService;
-    private final AuthService authService;
+    private final AuthFacade authFacade;
 
     /**
      * Constructor for MSGraphController
      * @param graphService The GMSGraphService class, used for interacting with the MSGraph API
-     * @param authService The AuthService class, used for getting credentials
+     * @param authFacade The AuthFacade class, used for getting credentials
      */
     @Inject
-    public MSGraphController(MSGraphService graphService, AuthService authService) {
+    public MSGraphController(MSGraphService graphService, AuthFacade authFacade) {
         this.graphService = graphService;
-        this.authService = authService;
+        this.authFacade = authFacade;
     }
 
     /**
@@ -37,7 +37,7 @@ public class MSGraphController {
     @GetMapping
     public ResponseEntity<List<String>> getTop2Tasks(@RequestParam String name) {
         // Check if the server is ready to handle requests
-        if (!authService.hasValidToken()) {
+        if (!authFacade.hasValidToken()) {
             return ResponseEntity.status(401).build();
         }
         // Call MSGraphService, since we know it's authenticated

@@ -1,7 +1,7 @@
 package controllerTests;
 
 import nils.todo.controllers.AuthController;
-import nils.todo.services.AuthService;
+import nils.todo.facades.AuthFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatusCode;
 
@@ -9,32 +9,32 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class AuthControllerTest {
-    AuthService authService = mock(AuthService.class);
+    AuthFacade authFacade = mock(AuthFacade.class);
 
-    AuthController authController = new AuthController(authService);
+    AuthController authController = new AuthController(authFacade);
 
     // /login tests
     // Incorrect URL
     @Test
     void loginIncorrectURLTest() {
-        when(authService.getAuthorizationUrl()).thenReturn(null);
-        doThrow(new IllegalArgumentException()).when(authService).launchBrowser(any());
+        when(authFacade.startLoginFlow()).thenThrow(new IllegalArgumentException());
+//        doThrow(new IllegalArgumentException()).when(authFacade).launchBrowser(any());
         assertThrows(RuntimeException.class, () -> authController.login());
     }
 
-    // Browser failure
-    @Test
-    void loginBrowserFailureTest() {
-        when(authService.getAuthorizationUrl()).thenReturn("validUrl");
-        doThrow(new RuntimeException()).when(authService).launchBrowser(anyString());
-        assertThrows(RuntimeException.class, () -> authController.login());
-    }
+//    // Browser failure
+//    @Test
+//    void loginBrowserFailureTest() {
+//        when(authFacade.startLoginFlow()).thenReturn("validUrl");
+//        doThrow(new RuntimeException()).when(authService).launchBrowser(anyString());
+//        assertThrows(RuntimeException.class, () -> authController.login());
+//    }
 
     // Valid test
     @Test
     void loginCorrectTest() {
-        when(authService.getAuthorizationUrl()).thenReturn("validUrl");
-        doNothing().when(authService).launchBrowser(anyString());
+        when(authFacade.startLoginFlow()).thenReturn("validUrl");
+//        doNothing().when(authService).launchBrowser(anyString());
 
         assertDoesNotThrow(() -> authController.login());
     }
@@ -43,24 +43,24 @@ public class AuthControllerTest {
     // Invalid code test
     @Test
     void invalidCodeTest() {
-        doThrow(RuntimeException.class).when(authService).acquireTokenFromCode(any());
-        when(authService.hasValidToken()).thenReturn(false);
+        doThrow(RuntimeException.class).when(authFacade).completeLogin(any());
+        when(authFacade.hasValidToken()).thenReturn(false);
         assertEquals(HttpStatusCode.valueOf(400), authController.redirect(null).getStatusCode());
     }
 
     // Token not valid
     @Test
     void invalidTokenTest() {
-        doNothing().when(authService).acquireTokenFromCode(any());
-        when(authService.hasValidToken()).thenReturn(false);
+        doNothing().when(authFacade).completeLogin(any());
+        when(authFacade.hasValidToken()).thenReturn(false);
         assertEquals(HttpStatusCode.valueOf(400), authController.redirect(null).getStatusCode());
     }
 
     // Valid test
     @Test
     void validTest() {
-        doNothing().when(authService).acquireTokenFromCode(any());
-        when(authService.hasValidToken()).thenReturn(true);
+        doNothing().when(authFacade).completeLogin(any());
+        when(authFacade.hasValidToken()).thenReturn(true);
         assertEquals(HttpStatusCode.valueOf(200), authController.redirect(null).getStatusCode());
     }
 
@@ -68,14 +68,14 @@ public class AuthControllerTest {
     // Token not valid
     @Test
     void statusNotValidTest() {
-        when(authService.hasValidToken()).thenReturn(true);
+        when(authFacade.hasValidToken()).thenReturn(true);
         assertEquals(HttpStatusCode.valueOf(200), authController.checkAuthStatus().getStatusCode());
     }
 
     // Token valid
     @Test
     void statusValidTest() {
-        when(authService.hasValidToken()).thenReturn(false);
+        when(authFacade.hasValidToken()).thenReturn(false);
         assertEquals(HttpStatusCode.valueOf(401), authController.checkAuthStatus().getStatusCode());
     }
 }

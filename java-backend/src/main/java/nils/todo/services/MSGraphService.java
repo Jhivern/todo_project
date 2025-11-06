@@ -1,6 +1,7 @@
 package nils.todo.services;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import nils.todo.facades.AuthFacade;
 import nils.todo.util.MSGraphParser;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -11,18 +12,18 @@ import java.util.List;
 @Singleton
 @Service
 public class MSGraphService {
-    private final AuthService authService;
+    private final AuthFacade authFacade;
     private final RestClient client;
     private final MSGraphParser msGraphParser;
 
     /**
      * Constructor for MSGraphService
-     * @param authService The AuthService class, used for getting credentials
+     * @param authFacade The AuthFacade class, used for getting credentials
      * @param client The client with which we make HTTP requests
      */
     @Inject
-    public MSGraphService(AuthService authService, RestClient client, MSGraphParser msGraphParser) {
-        this.authService =  authService;
+    public MSGraphService(AuthFacade authFacade, RestClient client, MSGraphParser msGraphParser) {
+        this.authFacade = authFacade;
         this.client = client;
         this.msGraphParser = msGraphParser;
     }
@@ -34,7 +35,7 @@ public class MSGraphService {
      */
     public String getTaskListID(String displayName) {
         // Perform the GET request
-        String token = authService.getAccessToken();
+        String token = authFacade.getAccessToken();
         System.out.println("Authorization: Bearer " + token);
         String responseBody = client.get()
                 .uri("/me/todo/lists")
@@ -58,7 +59,7 @@ public class MSGraphService {
         if (id == null) {
             throw new IllegalArgumentException("ID must not be null");
         }
-        String token = authService.getAccessToken();
+        String token = authFacade.getAccessToken();
         System.out.println("Authorization: Bearer " + token);
         String responseBody = client.get()
                 .uri("/me/todo/lists/" + id + "/tasks?$filter=status ne 'completed'")
