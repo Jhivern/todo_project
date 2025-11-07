@@ -1,4 +1,4 @@
-name: Java backend CI pipeline
+name: Java Backend CI Pipeline
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/jhivern/java-build:latest  # contains OpenJDK 17
+      image: maven:3.9.6-jdk-23  # public image with Maven + JDK 23
 
     steps:
       # Step 1: Checkout code
