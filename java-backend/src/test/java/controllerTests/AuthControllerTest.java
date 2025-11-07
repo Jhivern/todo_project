@@ -10,15 +10,13 @@ import static org.mockito.Mockito.*;
 
 public class AuthControllerTest {
     AuthFacade authFacade = mock(AuthFacade.class);
-
     AuthController authController = new AuthController(authFacade);
 
     // /login tests
     // Incorrect URL
     @Test
     void loginIncorrectURLTest() {
-        when(authFacade.startLoginFlow()).thenThrow(new IllegalArgumentException());
-//        doThrow(new IllegalArgumentException()).when(authFacade).launchBrowser(any());
+        doThrow(new IllegalArgumentException()).when(authFacade).startLoginFlow();
         assertThrows(RuntimeException.class, () -> authController.login());
     }
 
@@ -26,16 +24,14 @@ public class AuthControllerTest {
 //    @Test
 //    void loginBrowserFailureTest() {
 //        when(authFacade.startLoginFlow()).thenReturn("validUrl");
-//        doThrow(new RuntimeException()).when(authService).launchBrowser(anyString());
+//        doThrow(new RuntimeException()).when(authFacade).(anyString());
 //        assertThrows(RuntimeException.class, () -> authController.login());
 //    }
 
     // Valid test
     @Test
     void loginCorrectTest() {
-        when(authFacade.startLoginFlow()).thenReturn("validUrl");
-//        doNothing().when(authService).launchBrowser(anyString());
-
+        doNothing().when(authFacade).startLoginFlow();
         assertDoesNotThrow(() -> authController.login());
     }
 
