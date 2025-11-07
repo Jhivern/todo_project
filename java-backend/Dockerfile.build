@@ -1,9 +1,11 @@
-FROM ubuntu:22.04
+# Use Eclipse-Temurin (JDK 23)
+FROM eclipse-temurin:23-jdk
 
-# Install OpenJDK 17, Maven, Git, curl
+# Install Maven, Git, curl
 RUN apt-get update && \
-    apt-get install -y openjdk-17-jdk maven git curl && \
-    apt-get clean
+    apt-get install -y maven git curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
+# Set working directory
 WORKDIR /workspace
-
