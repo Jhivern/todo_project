@@ -10,23 +10,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/jhivern/java-build:latest # Custom Docker image using EclipseTemurin23
+      image: ghcr.io/jhivern/java-build:latest  # Custom Docker image with Eclipse Temurin 23
       options: --user root
 
     steps:
-      # Step 1: Checkout code
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Create cache directory if it does not exist
-      - name: Ensure Maven directory exists
-        run: mkdir -p ~/.m2/repository
+      # Step 2: Ensure Maven local repo directory exists
+      - name: Ensure Maven cache directory exists
+        run: mkdir -p /root/.m2/repository
 
       # Step 3: Cache Maven dependencies
       - name: Cache Maven
         uses: actions/cache@v3
         with:
-          path: ~/.m2/repository
+          path: /root/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('java-backend/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
