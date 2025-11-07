@@ -1,28 +1,37 @@
-name: Java backend CI pipeline
+name: Java Backend CI Pipeline
 
 on:
   push:
     paths:
       - 'java-backend/**'
-  # pull_request:
-  #   paths:
-  #     - 'java-backend/**'
   workflow_dispatch:
-  
+
 jobs:
   build:
-    runs-on: ubuntu-latest # Sets up a basic ubuntu virtual machine
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/jhivern/java-build:latest  # Custom Docker image with Eclipse Temurin 23
+      options: --user root
+
     steps:
+      # Step 1: Checkout repository
       - name: Checkout repository
-        uses: actions/checkout@v3 # Allows Github to look at the code in the repo
-      
-      - name: Set up JDK 23
-        uses: actions/setup-java@v3 # Set up the JDK environment
+        uses: actions/checkout@v3
+
+      # Step 2: Ensure Maven local repo directory exists
+      - name: Ensure Maven cache directory exists
+        run: mkdir -p /root/.m2/repository
+
+      # Step 3: Cache Maven dependencies
+      - name: Cache Maven
+        uses: actions/cache@v3
         with:
-          java-version: '23' # Project uses JDK 23
-          distribution: 'oracle'
-          cache: 'maven'
-          
+          path: /root/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('java-backend/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # Step 4: Build & test
       - name: Maven Build
         working-directory: java-backend
-        run: mvn clean install
+        run: mvn -B clean verify
