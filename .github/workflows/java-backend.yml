@@ -10,7 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: maven:3.9.6-jdk-23  # public image with Maven + JDK 23
+      image: ghcr.io/jhivern/java-build:latest # Custom Docker image using EclipseTemurin23
+      options: --user root
 
     steps:
       # Step 1: Checkout code
@@ -29,4 +30,4 @@ jobs:
       # Step 3: Build & test
       - name: Maven Build
         working-directory: java-backend
-        run: mvn clean install
+        run: mvn -B clean verify
