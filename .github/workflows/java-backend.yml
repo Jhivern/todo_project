@@ -13,19 +13,11 @@ jobs:
       image: ghcr.io/jhivern/java-build:latest  # contains OpenJDK 17
 
     steps:
-      # Step 1: Login to GHCR
-      - name: Login to GHCR
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.CR_PAT }}
-
-      # Step 2: Checkout code
+      # Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 3: Cache Maven dependencies
+      # Step 2: Cache Maven dependencies
       - name: Cache Maven
         uses: actions/cache@v3
         with:
@@ -34,7 +26,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Step 4: Build & test
+      # Step 3: Build & test
       - name: Maven Build
         working-directory: java-backend
         run: mvn clean install
